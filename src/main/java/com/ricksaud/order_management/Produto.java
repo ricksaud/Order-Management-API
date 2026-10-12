@@ -63,4 +63,15 @@ public class Produto {
         }
         quantidadeEstoque -= quantidade;
     }
+
+    public void alterarPreco(BigDecimal novoPreco){
+
+        if(novoPreco == null || novoPreco.compareTo(BigDecimal.ZERO) < 0 ){
+            throw new IllegalArgumentException("Preço inválido!");
+
+
+        }
+        this.preco = novoPreco;
+
+    }
 }
