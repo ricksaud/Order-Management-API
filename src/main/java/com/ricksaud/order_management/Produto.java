@@ -1,6 +1,9 @@
 package com.ricksaud.order_management;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class Produto {
 
@@ -10,7 +13,7 @@ public class Produto {
     private BigDecimal preco;
     private int quantidadeEstoque;
 
-    public Produto(Long id, String nome, BigDecimal preco, int quantidadeEstoque) {
+    public Produto(String nome, BigDecimal preco, int quantidadeEstoque) {
 
         if(preco == null || preco.compareTo(BigDecimal.ZERO) < 0){
             throw new IllegalArgumentException("Preco invalido.");
@@ -25,7 +28,6 @@ public class Produto {
         }
 
 
-        this.id = id;
         this.nome = nome.trim();
         this.preco = preco;
         this.quantidadeEstoque = quantidadeEstoque;
@@ -58,9 +60,16 @@ public class Produto {
 
     public void removerEstoque(int quantidade){
 
-        if(quantidade <= 0 || quantidade > quantidadeEstoque){
-            throw new IllegalArgumentException("A quantidade precisa ser maior do que 0 e menor do que a quantidade em estoque!");
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("A quantidade deve ser maior que zero.");
         }
+
+        if (quantidade > quantidadeEstoque) {
+            throw new IllegalArgumentException("Estoque insuficiente.");
+        }
+
+
+
         quantidadeEstoque -= quantidade;
     }
 
@@ -74,4 +83,7 @@ public class Produto {
         this.preco = novoPreco;
 
     }
+
+
+
 }
