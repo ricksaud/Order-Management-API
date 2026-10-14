@@ -1,14 +1,13 @@
 package com.ricksaud.order_management;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Pedido {
 
     private List<ItemPedido> itens = new ArrayList<>();
     private StatusPedido status = StatusPedido.PENDENTE;
+
 
     public void adicionarItem(ItemPedido item){
 
@@ -52,6 +51,25 @@ public class Pedido {
             total = total.add(item.calcularSubtotal());
         }
         return total;
+    }
+
+
+    private Map<Produto, Integer> agruparQuantidadesPorProduto(){
+        Map<Produto, Integer> quantidades = new HashMap<>();
+
+        for(ItemPedido item : itens){
+            Produto produto = item.getProduto();
+            int quantidade = item.getQuantidade();
+
+            int totalAtual = quantidades.getOrDefault(produto, 0);
+            quantidades.put(produto, totalAtual + quantidade);
+
+        }
+        return  quantidades;
+
+
+
+
     }
 
     public StatusPedido getStatus() {

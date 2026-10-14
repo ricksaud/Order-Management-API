@@ -1,9 +1,7 @@
 package com.ricksaud.order_management;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
 
 public class Produto {
 
@@ -84,6 +82,12 @@ public class Produto {
 
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Produto{" +
+                "preco=" + preco +
+                ", nome='" + nome + '\'' +
+                ", quantidadeEstoque=" + quantidadeEstoque +
+                '}';
+    }
 }
