@@ -1,78 +1,103 @@
 package com.ricksaud.order_management;
 
+
+
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Pedido {
 
     private List<ItemPedido> itens = new ArrayList<>();
     private StatusPedido status = StatusPedido.PENDENTE;
 
+    public StatusPedido getStatus() {
+        return status;
+    }
 
     public void adicionarItem(ItemPedido item){
-
         if(status != StatusPedido.PENDENTE){
-            throw new IllegalStateException(
-                    "Somente pedidos pendentes podem receber itens."
-            );
+            throw new IllegalStateException("O estado do pedido nao esta pendente.");
+
         }
 
+        if(item == null){
+            throw new IllegalArgumentException("O item e nulo");
 
-        Objects.requireNonNull(item, "O item nao pode ser nulo");
+        }
+
         itens.add(item);
-    }
 
-    public void confirmar(){
-        if(status!=StatusPedido.PENDENTE){
-            throw new IllegalStateException(
-                    "Somente pedidos pendentes podem ser confirmados."
-            );
-        }
-        if (itens.isEmpty()) {
-            throw new IllegalStateException(
-                    "Não é possível confirmar um pedido sem itens."
-            );
-        }
-        status = StatusPedido.CONFIRMADO;
-    }
-
-    public void cancelar() {
-        if (status != StatusPedido.PENDENTE) {
-            throw new IllegalStateException(
-                    "Somente pedidos pendentes podem ser cancelados."
-            );
-        }
-        status = StatusPedido.CANCELADO;
     }
 
     public BigDecimal calcularTotal(){
         BigDecimal total = BigDecimal.ZERO;
-        for(ItemPedido item: itens){
-            total = total.add(item.calcularSubtotal());
-        }
-        return total;
-    }
-
-
-    private Map<Produto, Integer> agruparQuantidadesPorProduto(){
-        Map<Produto, Integer> quantidades = new HashMap<>();
 
         for(ItemPedido item : itens){
-            Produto produto = item.getProduto();
-            int quantidade = item.getQuantidade();
+            total = total.add(item.calcularSubtotal());
+        }
 
-            int totalAtual = quantidades.getOrDefault(produto, 0);
-            quantidades.put(produto, totalAtual + quantidade);
+        return total;
+
+    }
+
+    public void confirmar(){
+        if(status != StatusPedido.PENDENTE){
+            throw new IllegalStateException("O pedido nao esta pendente.");
+        }
+
+        if(itens.isEmpty()){
+            throw new IllegalStateException("Não é possível confirmar um pedido sem itens.");
+        }
+
+        Map<Produto, Integer> quantidades = agruparQuantidadesPorProduto();
+
+        for(Map.Entry<Produto, Integer> entrada : quantidades.entrySet()){
+            Produto produto = entrada.getKey();
+            int quantidadeNecessaria = entrada.getValue();
+
+            if(quantidadeNecessaria > produto.getQuantidadeEstoque()){
+                throw new IllegalStateException("Estoque insuficiente para o produto: " + produto.getNome());
+            }
+        }
+
+        for(Map.Entry<Produto,Integer> entrada : quantidades.entrySet()){
+            Produto produto = entrada.getKey();
+            int quantidadeNecessaria = entrada.getValue();
+
+            produto.removerEstoque(quantidadeNecessaria);
+        }
+
+
+        status = StatusPedido.CONFIRMADO;
+    }
+
+
+    public void cancelar(){
+        if(status != StatusPedido.PENDENTE){
+            throw new IllegalStateException("Estado nao esta pendente.");
+        }
+
+        status = StatusPedido.CANCELADO;
+    }
+
+    private Map<Produto, Integer> agruparQuantidadesPorProduto(){
+        HashMap<Produto, Integer> quantidades = new HashMap<>();
+
+        for(ItemPedido item: itens){
+            Produto produto = item.getProduto();
+
+            int quantidadeAtual = quantidades.getOrDefault(produto,0);
+            int novaQuantidade = quantidadeAtual + item.getQuantidade();
+
+            quantidades.put(produto, novaQuantidade);
 
         }
-        return  quantidades;
 
-
-
+        return quantidades;
 
     }
 
-    public StatusPedido getStatus() {
-        return status;
-    }
 }
