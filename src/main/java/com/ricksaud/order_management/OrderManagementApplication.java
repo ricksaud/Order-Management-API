@@ -109,27 +109,29 @@ public class OrderManagementApplication implements CommandLineRunner {
 //		System.out.println("Estoque depois: " + celular.getQuantidadeEstoque());
 
 
-		Produto camiseta = new Produto("Camiseta", new BigDecimal("50.00"), 10);
-		Produto celular = new Produto("Celular", new BigDecimal("5000.00"), 1);
+//		Produto camiseta = new Produto("Camiseta", new BigDecimal("50.00"), 10);
+//		Produto celular = new Produto("Celular", new BigDecimal("5000.00"), 1);
+//
+//
+//		ItemPedido camisetaPedido = new ItemPedido(camiseta, 2);
+//		ItemPedido celularPedido = new ItemPedido(celular, 3);
+//
+//		Pedido pedido1 = new Pedido();
+//		pedido1.adicionarItem(camisetaPedido);
+//		pedido1.adicionarItem(celularPedido);
+//
+//		try{
+//			pedido1.confirmar();
+//		} catch (IllegalStateException e){
+//			System.out.println("Erro esperado: " + e.getMessage());
+//
+//		}
+//
+//		System.out.println(pedido1.getStatus());
+//		System.out.println(camiseta.getQuantidadeEstoque());
+//		System.out.println(celular.getQuantidadeEstoque());
 
 
-		ItemPedido camisetaPedido = new ItemPedido(camiseta, 2);
-		ItemPedido celularPedido = new ItemPedido(celular, 3);
-
-		Pedido pedido1 = new Pedido();
-		pedido1.adicionarItem(camisetaPedido);
-		pedido1.adicionarItem(celularPedido);
-
-		try{
-			pedido1.confirmar();
-		} catch (IllegalStateException e){
-			System.out.println("Erro esperado: " + e.getMessage());
-
-		}
-
-		System.out.println(pedido1.getStatus());
-		System.out.println(camiseta.getQuantidadeEstoque());
-		System.out.println(celular.getQuantidadeEstoque());
 
 
 
