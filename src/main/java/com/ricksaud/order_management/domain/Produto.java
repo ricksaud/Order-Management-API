@@ -1,15 +1,27 @@
-package com.ricksaud.order_management;
+package com.ricksaud.order_management.domain;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 import java.math.BigDecimal;
 
 
+
+
+@Entity
 public class Produto {
 
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private BigDecimal preco;
     private int quantidadeEstoque;
+
+
+    protected Produto(){}
 
     public Produto(String nome, BigDecimal preco, int quantidadeEstoque) {
 
