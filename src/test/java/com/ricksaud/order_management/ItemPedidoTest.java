@@ -173,4 +173,66 @@ assertEquals(1, mouse.getQuantidadeEstoque());
 
     }
 
+    @Test
+    public void deveRejeitarAdicaoDeItemEmPedidoConfirmado(){
+        Produto teclado = new Produto("Teclado Mecanico", new BigDecimal("120.00"), 10);
+
+        ItemPedido item1 = new ItemPedido(teclado, 2);
+        ItemPedido item2 = new ItemPedido(teclado, 5);
+
+
+        Pedido pedido = new Pedido();
+        pedido.adicionarItem(item1);
+
+        pedido.confirmar();
+
+        assertThrows(IllegalStateException.class, () -> pedido.adicionarItem(item2));
+
+
+        assertEquals(new BigDecimal("240.00"), pedido.calcularTotal());
+        assertEquals(StatusPedido.CONFIRMADO, pedido.getStatus());
+        assertEquals(8, teclado.getQuantidadeEstoque());
+
+
+
+    }
+
+    @Test
+    public void deveRejeitarAdicaoDeItemEmPedidoCancelado(){
+        Produto teclado = new Produto("Teclado Mecanico", new BigDecimal("120.00"), 10);
+        ItemPedido item1 = new ItemPedido(teclado, 2);
+        ItemPedido item2 = new ItemPedido(teclado, 5);
+
+        Pedido pedido = new Pedido();
+        pedido.adicionarItem(item1);
+
+        pedido.cancelar();
+
+        assertThrows(IllegalStateException.class, () -> pedido.adicionarItem(item2));
+
+
+        assertEquals(StatusPedido.CANCELADO, pedido.getStatus());
+        assertEquals(new BigDecimal("240.00"), pedido.calcularTotal());
+        assertEquals(10, teclado.getQuantidadeEstoque());
+
+    }
+
+
+    @Test
+    public void deveRejeitarConfirmacaoDePedidoCancelado(){
+
+        Produto teclado = new Produto("Teclado Mecanico", new BigDecimal("120.00"), 10);
+        ItemPedido item1 = new ItemPedido(teclado, 2);
+
+        Pedido pedido = new Pedido();
+        pedido.adicionarItem(item1);
+
+        pedido.cancelar();
+
+        assertThrows(IllegalStateException.class, () -> pedido.confirmar());
+
+        assertEquals(StatusPedido.CANCELADO, pedido.getStatus());
+        assertEquals(10, teclado.getQuantidadeEstoque());
+    }
+
 }
